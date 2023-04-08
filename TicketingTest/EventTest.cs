@@ -47,7 +47,13 @@ namespace TicketingTest
         [TestMethod]
         public void SellTooManyTicketsTest()
         {
-            Assert.Fail("Method not implemented");
+            Assert.AreEqual(150, shrek.NumAvailableTickets);
+            double amountSold = shrek.SellTickets(151);
+            Assert.AreEqual(0, amountSold); // The returned value should be 0
+            
+            // The number of tickets should be unchanged as well
+            Assert.AreEqual(150, shrek.NumAvailableTickets);
+            
         }
 
         [TestMethod]
