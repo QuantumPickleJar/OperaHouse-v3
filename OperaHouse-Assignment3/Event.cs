@@ -112,6 +112,7 @@ namespace OperaHouse_Assignment3
                     int numSold = 0;
                     for (int i = NumAvailableTickets; i > 0; i--, NumAvailableTickets--)
                     {
+                        Roster[i].Purchase();
                         numSold++;
                     }
                     return numSold * regularTicketPrice;
@@ -122,14 +123,26 @@ namespace OperaHouse_Assignment3
 
         public double ReturnTickets(List<int> ticketNums)
         {
-            // ensure the loop will be in safe range
-
-
-            foreach (var ticket in ticketNums)
+            double amtOwed = 0;
+            if (ticketNums.Count >= 0)
             {
+                Ticket oldTicket = null;
+
+                foreach (int t_id in ticketNums)
+                {
+                    // return immediately if any are bought
+
+                    if (Roster.TryGetValue(t_id, out oldTicket))
+            {
+                        // watch NumAvailableTickets
+                        amtOwed = Roster[t_id].Return();
+                        //amtOwed = oldTicket.Price; see new one liner!
+
+                    }
+                    else return 0;
 
             }
-            throw new NotImplementedException();
+            return amtOwed;
         }
     }
 
