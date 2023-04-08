@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +21,11 @@ namespace OperaHouse_Assignment3
 
         public bool ConcessionSales { get; set; }
         public int NumAvailableTickets { get; private set; }
-        private List<Ticket> Roster { get; set; }
+
+        // Holds the available pool of unsold tickets
+        //private List<Ticket> Roster { get; set; }
+
+        private Dictionary<int, Ticket> Roster { get; set; }
 
         public Event(string title, Performer performer, int numTickets, double ticketPrice, DateTime eventTime, int durationMinutes, bool concessionSales)
         {
@@ -31,19 +37,46 @@ namespace OperaHouse_Assignment3
             this.DurationMinutes = durationMinutes;
             this.ConcessionSales = concessionSales;
 
-            Ticket item = new Ticket(ticketPrice, "");
-            this.Roster = new List<Ticket>(numTickets);
+            //this.Roster = new List<Ticket>(numTickets);
+            this.Roster = new Dictionary<int, Ticket>(numTickets);
+
 
             // iteratively populate tickets per the above datum
             for (int i = 0; i < numTickets; i++)
             {
-                // TODO: generate a more fitting seat code
-                Roster.Add(new Ticket(ticketPrice, ""));
+                // if (i = 0)th ticket, code will be 'A0'
+                // otherwise, we use i(0) as a base code:
+                string nextCode = i == 0 ? "A0" : NextSeatCode(Roster[i - 1].SeatCode);
+
+                var tck = new Ticket(regularTicketPrice, nextCode);
+
+                Roster.Add(i, tck);
+                //BindTicketToSeat(ref tck);
+
             }
             // update the property to reflect the roster
             NumAvailableTickets = Roster.Count(); 
            
         }
+
+        private string NextSeatCode(string prevCode)
+        {
+            // thanks to the ternary statement in CTOR for-loop, we can assume a non-null code
+            char aisle = prevCode[0];
+            int row = int.Parse(prevCode.Substring(1));
+
+
+            if (row < totalNumTickets % 26)
+                row++;
+            else
+            {
+                row = 0;
+                aisle = (char)(aisle + 1);
+            }
+
+            return $"{aisle}{row}";
+        }
+
 
 
         public override string ToString()
@@ -133,14 +166,19 @@ namespace OperaHouse_Assignment3
                     // return immediately if any are bought
 
                     if (Roster.TryGetValue(t_id, out oldTicket))
-            {
+                    {
                         // watch NumAvailableTickets
                         amtOwed = Roster[t_id].Return();
                         //amtOwed = oldTicket.Price; see new one liner!
 
                     }
                     else return 0;
-
+   
+                    //if (!Roster[t_id].IsBought)
+                    //{
+                    //    amtOwed += Roster[t_id].Return();
+                    //}
+                }
             }
             return amtOwed;
         }
