@@ -45,7 +45,6 @@ namespace OperaHouse_Assignment3
            
         }
 
-        // TODO 
 
         public override string ToString()
         {
@@ -83,8 +82,11 @@ namespace OperaHouse_Assignment3
         // derive the cost from the number of available tickets + price
         public double TicketSales()
         {
-            return ShowExpenses() - 
-                ((totalNumTickets - NumAvailableTickets) * regularTicketPrice);
+
+            double profTickets = (totalNumTickets - NumAvailableTickets) * regularTicketPrice;
+            return profTickets;
+
+            //return ((totalNumTickets - NumAvailableTickets) * regularTicketPrice);
 
         }
 
@@ -95,20 +97,27 @@ namespace OperaHouse_Assignment3
 
         public double SellTickets(int v)
         {
-            if (NumAvailableTickets > 0) 
-            {
-                // make sure we don't oversell tickets
+            if (NumAvailableTickets > 0)
+            { 
+                // avoid sheer oversale
                 if (NumAvailableTickets - v >= 0) 
                 {
                     NumAvailableTickets -= v;
                     return v * regularTicketPrice;
-                }
-                
-                // if we reach here, the transaction failed.
-                return 0;
+                } 
+                else
+                {
+                    // attempt to sell v tickets until run out
 
-            } else 
-                return 0;
+                    int numSold = 0;
+                    for (int i = NumAvailableTickets; i > 0; i--, NumAvailableTickets--)
+                    {
+                        numSold++;
+                    }
+                    return numSold * regularTicketPrice;
+                }
+            // if we reach here, the transaction failed.
+            } else return 0;
         }
 
         public double ReturnTickets(List<int> ticketNums)
