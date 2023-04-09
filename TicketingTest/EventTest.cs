@@ -79,7 +79,20 @@ namespace TicketingTest
             Assert.AreEqual(148, shrek.NumAvailableTickets); 
         }
 
-       
+        [TestMethod]
+        public void ReturnTicketsOverloadTest()
+        {
+            shrek.SellTickets(5);
+            //List<int> ticketNums = new List<int>((new int[] { 1, 2, 3 }));
+            List<Event.Ticket> testTickets = new List<Ticket>
+            {
+
+            }
+
+            double amountReturned = shrek.ReturnTickets(ticketNums);//Return tickets num 1,2,3
+            Assert.AreEqual(3 * 12, amountReturned);
+            Assert.AreEqual(148, shrek.NumAvailableTickets);
+        }
         [TestMethod]
         public void DayOfWeekTest()
         {
