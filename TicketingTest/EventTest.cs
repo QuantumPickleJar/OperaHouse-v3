@@ -94,8 +94,32 @@ namespace TicketingTest
             double profit = 20 * 200 - 1500 - 150 - 100;
             Assert.AreEqual(profit, deathShow.Profit());
             Assert.IsTrue(deathShow.Profitable());
+
+            // test that we can profit without any tickets
+            // (saves us from writing another test method)
+            shrek.Stage = lounge;
+            shrek.SellTickets(20);
+            shrek.SellConcession(5.00, 3, "hot dog");
+            shrek.SellConcession(10.00, 1, "large popcorn");
+            profit = (25.00 + (20 * 12)) - 125;
+
+            Assert.IsTrue(shrek.IsSellingConcessions);
+            Assert.AreEqual(profit, shrek.Profit());
+            Assert.IsTrue(shrek.Profitable());
         }
 
+
+        [TestMethod]
+        public void ProfitWithConcessionsTest()
+        {
+            deathShow.Stage = main;
+            deathShow.SellTickets(200);
+            double profit = 20 * 200 - 1500 - 150 - 100;
+            Assert.AreEqual(profit, deathShow.Profit());
+            Assert.IsTrue(deathShow.Profitable());
+        }
+
+        
 
 
         [TestMethod]
