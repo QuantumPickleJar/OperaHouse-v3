@@ -154,6 +154,29 @@ namespace OperaHouse_Assignment3
             // if we reach here, the transaction failed.
             } else return 0;
         }
+        
+        public double ReturnTickets(List<Ticket> tickets)
+        {
+            double amtOwed = 0;
+            if (tickets.Any(t => !t.IsBought))
+                return amtOwed;
+            else
+            {
+                foreach (var ticket in tickets)
+                {
+                    if (Roster.ContainsValue(ticket))
+                    {
+                        // watch NumAvailableTickets
+                        amtOwed += Roster.FirstOrDefault(keyVal => keyVal.Value == ticket).Value.Price;
+                        NumAvailableTickets++;
+                        //amtOwed = oldTicket.Price; see new one liner!
+
+                    }
+                    else return amtOwed;
+                }
+                return amtOwed;
+            }
+        }
 
         public double ReturnTickets(List<int> ticketNums)
         {
@@ -164,8 +187,6 @@ namespace OperaHouse_Assignment3
 
                 foreach (int t_id in ticketNums)
                 {
-                    // return immediately if any are bought
-
                     if (Roster.TryGetValue(t_id, out oldTicket))
                     {
                         // watch NumAvailableTickets
@@ -175,71 +196,9 @@ namespace OperaHouse_Assignment3
 
                     }
                     else return 0;
-   
-                    //if (!Roster[t_id].IsBought)
-                    //{
-                    //    amtOwed += Roster[t_id].Return();
-                    //}
                 }
             }
             return amtOwed;
-        }
-    }
-
-    /// <summary>
-    /// Tickets can be sold individually
-    /// Can also be sold in "blocks"
-    /// 
-    /// </summary>
-    internal class Ticket
-    {
-
-        public string SeatCode { get; private set; }
-
-        public Boolean IsBought { get; private set; }
-
-        public double Price { get; private set; }
-
-        public Ticket(double cost, string seat)
-        {
-            IsBought = false;
-            Price = cost;
-            SeatCode = seat;
-        }
-
-        // return the amount of the transaction
-        public double Purchase()
-        {
-            if (!IsBought) 
-            {
-                IsBought = true;
-                return Price;
-            } else 
-                return 0;
-        }
-
-
-        public double Return()
-        {
-            if (NUnitDetector.isRunningFromNUnit)
-            {
-                /** bypass the check if we're in a test; 
-                 * the only featuer that will not work with this setup 
-                 * is testing that Unsold tickets are rejected.  This can 
-                 * be alleviated by using an overloaded ReturnTickets method
-                 * that could accept actual tickets.  
-                 * This way, we can properly use the IsBought property of Ticket.
-                */
-                IsBought = false;
-                return Price;
-            }
-
-            if (IsBought)
-            {
-                IsBought = false;
-                return Price;
-            }
-            else return 0;
         }
     }
 
