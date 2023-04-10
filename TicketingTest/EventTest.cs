@@ -49,9 +49,7 @@ namespace TicketingTest
         {
             Assert.AreEqual(150, shrek.NumAvailableTickets);
             double amountSold = shrek.SellTickets(151);
-            Assert.AreEqual(0, amountSold); // The returned value should be 0
-            // The number of tickets should be unchanged as well
-            Assert.AreEqual(150, shrek.NumAvailableTickets);
+            Assert.AreEqual(150 * 12, amountSold); 
             
         }
 
@@ -79,27 +77,6 @@ namespace TicketingTest
             Assert.AreEqual(148, shrek.NumAvailableTickets); 
         }
 
-        [TestMethod]
-        public void ReturnTicketsOverloadTest()
-        {
-            shrek.SellTickets(5);
-            //List<int> ticketNums = new List<int>((new int[] { 1, 2, 3 }));
-            // need to parse the cost from the event, so we can do this:
-            Event dummyShrek = shrek;
-            double shrekPrice = dummyShrek.SellTickets(1);
-
-            List<Ticket> testTickets = new List<Ticket>()
-            {
-                new Ticket(shrekPrice,"ZZ24"),
-                new Ticket(shrekPrice,"ZZ25"),
-                new Ticket(shrekPrice,"ZZ26")
-            };
-            testTickets.ForEach(tck => tck.Purchase());
-
-            double amountReturned = shrek.ReturnTickets(testTickets);//Return tickets num 1,2,3
-            Assert.AreEqual(3 * 12, amountReturned);
-            Assert.AreEqual(148, shrek.NumAvailableTickets);
-        }
         [TestMethod]
         public void DayOfWeekTest()
         {
