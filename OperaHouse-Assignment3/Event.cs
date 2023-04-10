@@ -19,7 +19,7 @@ namespace OperaHouse_Assignment3
         public Performer Performer { get; set; }
         public Stage Stage { get; set; }
 
-        public bool ConcessionSales { get; set; }
+        public bool IsSellingConcessions { get; set; }
 
 
         //public List<ConcessionSale>? ConcessionsLog { get; private set; }
@@ -42,7 +42,7 @@ namespace OperaHouse_Assignment3
             this.regularTicketPrice = ticketPrice;
             this.EventTime = eventTime;
             this.DurationMinutes = durationMinutes;
-            this.ConcessionSales = concessionSales;
+            this.IsSellingConcessions = concessionSales;
             // considered creating a Nullable class/struct to 
             // void populating if ConcessionSales is false
             this.ConcessionsLog = new List<ConcessionSale>();
@@ -92,12 +92,11 @@ namespace OperaHouse_Assignment3
         {
             string result = Title + " by " + Performer + " on " + EventTime.ToShortDateString();
             result += " at " + EventTime.ToShortTimeString() + ". Concessions: ";
-            result += ConcessionSales ? "Yes. " : "No. ";
+            result += IsSellingConcessions ? "Yes. " : "No. ";
             result += "Tickets available: " + NumAvailableTickets;
             return result;
         }
 
-    
 
         public bool IsWeekend()
         {
@@ -118,7 +117,13 @@ namespace OperaHouse_Assignment3
 
         public double Profit()
         {
-            return TicketSales() - ShowExpenses();
+            return (IsSellingConcessions) ? (ConcessionSales() + TicketSales()) - ShowExpenses()
+                            : TicketSales() - ShowExpenses();
+        }
+
+        private double ConcessionSales()
+        {
+            return ConcessionsLog.Sum(c => c.Cost());
         }
 
         // derive the cost from the number of available tickets + price
@@ -135,6 +140,13 @@ namespace OperaHouse_Assignment3
         public bool Profitable()
         {
             return Profit() > 0;
+        }
+       
+        public double SellConcession(double cost, int quantity, string item)
+        {
+            ConcessionSale sale = new ConcessionSale(cost, quantity, item);
+            ConcessionsLog.Add(sale);
+            return sale.Cost();
         }
 
         public double SellTickets(int v)

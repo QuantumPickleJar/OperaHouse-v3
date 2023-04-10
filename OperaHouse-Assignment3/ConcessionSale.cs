@@ -2,6 +2,7 @@
 
 namespace OperaHouse_Assignment3
 {
+
     public class ConcessionSale
     {
         public double UnitPrice { get; set; }

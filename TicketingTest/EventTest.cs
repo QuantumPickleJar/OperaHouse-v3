@@ -12,7 +12,7 @@ namespace TicketingTest
         Stage main, lounge;
         Performer drDeath;
         Performer belushi;
-
+        
         [TestInitialize]
         public void SetUp()
         {
