@@ -162,7 +162,6 @@ namespace OperaHouse_Assignment3
                 return amtOwed;
             else
             {
-                Ticket oldTicket = null;
                 foreach (var ticket in tickets)
                 {
                     if (Roster.ContainsValue(ticket))
