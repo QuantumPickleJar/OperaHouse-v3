@@ -20,6 +20,11 @@ namespace OperaHouse_Assignment3
         public Stage Stage { get; set; }
 
         public bool ConcessionSales { get; set; }
+
+
+        //public List<ConcessionSale>? ConcessionsLog { get; private set; }
+        public List<ConcessionSale> ConcessionsLog { get; private set; }
+
         public int NumAvailableTickets { get; private set; }
 
         // Holds the available pool of unsold tickets
@@ -38,7 +43,9 @@ namespace OperaHouse_Assignment3
             this.EventTime = eventTime;
             this.DurationMinutes = durationMinutes;
             this.ConcessionSales = concessionSales;
-
+            // considered creating a Nullable class/struct to 
+            // void populating if ConcessionSales is false
+            this.ConcessionsLog = new List<ConcessionSale>();
             //this.Roster = new List<Ticket>(numTickets);
             this.Roster = new Dictionary<int, Ticket>(numTickets);
 
