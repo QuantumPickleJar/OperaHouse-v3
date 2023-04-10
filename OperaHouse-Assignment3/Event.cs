@@ -26,10 +26,11 @@ namespace OperaHouse_Assignment3
         //private List<Ticket> Roster { get; set; }
 
         private Dictionary<int, Ticket> Roster { get; set; }
-        
+
 
         public Event(string title, Performer performer, int numTickets, double ticketPrice, DateTime eventTime, int durationMinutes, bool concessionSales)
         {
+
             this.Title = title;
             this.Performer = performer;          
             this.totalNumTickets = numTickets;
@@ -49,7 +50,7 @@ namespace OperaHouse_Assignment3
                 // otherwise, we use i(0) as a base code:
                 string nextCode = i == 0 ? "A0" : NextSeatCode(Roster[i - 1].SeatCode);
 
-                var tck = new Ticket(regularTicketPrice, nextCode);
+                var tck = new Ticket(i, regularTicketPrice, nextCode);
 
                 Roster.Add(i, tck);
                 //BindTicketToSeat(ref tck);
@@ -134,56 +135,48 @@ namespace OperaHouse_Assignment3
             if (NumAvailableTickets > 0)
             { 
                 // avoid sheer oversale
-                if (NumAvailableTickets - v >= 0) 
+                if (NumAvailableTickets - v < 0 || v > totalNumTickets) 
                 {
-                    NumAvailableTickets -= v;
-                    return v * regularTicketPrice;
-                } 
-                else
-                {
-                    // attempt to sell v tickets until run out
-
-                    int numSold = 0;
-                    for (int i = NumAvailableTickets; i > 0; i--, NumAvailableTickets--)
-                    {
-                        Roster[i].Purchase();
-                        numSold++;
-                    }
-                    return numSold * regularTicketPrice;
+                    // limit v to match what can be supplied
+                    v = Math.Min(NumAvailableTickets, v);
                 }
+                // attempt to sell v tickets until run out
+                int numSold = 0; 
+                for (int i = 0; i < v; i++, NumAvailableTickets--)
+                {
+                    Roster[i].Purchase();
+                    numSold++;
+                }
+
+                return numSold * regularTicketPrice;
             // if we reach here, the transaction failed.
             } else return 0;
         }
         
-        public double ReturnTickets(List<Ticket> tickets)
-        {
-            double amtOwed = 0;
-            if (tickets.Any(t => !t.IsBought))
-                return amtOwed;
-            else
-            {
-                foreach (var ticket in tickets)
-                {
-                    if (Roster.ContainsValue(ticket))
-                    {
-                        // watch NumAvailableTickets
-                        amtOwed += Roster.FirstOrDefault(keyVal => keyVal.Value == ticket).Value.Price;
-                        NumAvailableTickets++;
-                        //amtOwed = oldTicket.Price; see new one liner!
-
-                    }
-                    else return amtOwed;
-                }
-                return amtOwed;
-            }
-        }
-
+        /**
+         * The question: 
+         * in the line given we're just given a range of ints.  
+         * Am I to understand that these ints should be traced 
+         * to some sort of TicketID property?  
+         * 
+         * If not, then the manner in which we're testing ReturnTickets
+         * would need to be altered.  Modifying teacher provided code 
+         * previously has been a sign of "going in the wrong direction"
+         * 
+         *
+         */
         public double ReturnTickets(List<int> ticketNums)
         {
             double amtOwed = 0;
             if (ticketNums.Count >= 0)
             {
                 Ticket oldTicket = null;
+
+                //for (int i = 0; i < ticketNums; i++)
+                //{
+                //    if (Roster[i].IsBought)
+                //        amtOwed += Roster[i].Return();
+                //}
 
                 foreach (int t_id in ticketNums)
                 {
