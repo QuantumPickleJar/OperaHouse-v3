@@ -137,9 +137,12 @@ namespace OperaHouse_Assignment3
             return result;
         }
 
-        public bool IsSOldOut
+        /// <summary>
+        /// Returns true if the number of available tickets is 0
+        /// </summary>
+        public bool IsSoldOut
         {
-            get { throw new NotImplementedException(); }
+            get { return (NumAvailableTickets == 0); }
 
         }
 
