@@ -4,8 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OperaHouse_Assignment3
+namespace OperaHouse_Assignment3 : 
 {
+    
+    /// <summary>
+    /// Designed to encapsulate a collection of Event objects
+    /// and allowed for performing sorting and seraching on the events.
+    /// </summary>
     public class EventList
     {
         private List<Event> events;
@@ -20,7 +25,10 @@ namespace OperaHouse_Assignment3
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// #1: Events should be sorted by date as default/natural order    
+        /// </summary>
+        /// <exception cref="NotImplmentedException"></exception>
         public void SortByDate()
         {
             throw new NotImplementedException();

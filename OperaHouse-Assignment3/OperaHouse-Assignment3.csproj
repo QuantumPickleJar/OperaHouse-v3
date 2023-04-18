@@ -41,8 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConcessionSale.cs" />
+    <Compile Include="DateComparer.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="EventList.cs" />
     <Compile Include="NUnitDetector.cs" />
     <Compile Include="Performer.cs" />
     <Compile Include="Program.cs" />
