@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32811.315
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperaHouse-Assignment3", "OperaHouse-Assignment3\OperaHouse-Assignment3.csproj", "{1753DD2B-BAF0-41E3-BD4C-BC65FC310C62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketingTest", "TicketingTest\TicketingTest.csproj", "{9D55ED55-FEA7-40DE-9756-201BAB3F836F}"
@@ -22,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF2FA420-4AFA-47E7-9232-5D54B9D33048}
 	EndGlobalSection
 EndGlobal
