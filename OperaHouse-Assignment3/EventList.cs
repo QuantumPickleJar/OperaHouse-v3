@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OperaHouse_Assignment3 : 
+namespace OperaHouse_Assignment3 
 {
     
     /// <summary>
@@ -15,23 +15,29 @@ namespace OperaHouse_Assignment3 :
     {
         private List<Event> events;
 
+        public EventList()
+        {
+            events = new List<Event>();
+        }
+
         public void AddEvent(Event e)
         {
-            throw new NotImplementedException();
+            events.Add(e);
         }
 
         public void AddEvent(List<Event> events)
         {
-            throw new NotImplementedException();
+            this.events.AddRange(events);
         }
 
         /// <summary>
-        /// #1: Events should be sorted by date as default/natural order    
+        /// #1: Events should be sorted by date as default/natural order
+        /// using the DateComparer
         /// </summary>
         /// <exception cref="NotImplmentedException"></exception>
         public void SortByDate()
         {
-            throw new NotImplementedException();
+            events.Sort(new DateComparer());
         }
 
         public void SortByTitle()
@@ -41,12 +47,23 @@ namespace OperaHouse_Assignment3 :
 
         public List<Event> SearchByPerformer(string name)
         {
-            throw new NotImplementedException();
+            return events.Where(e => e.Performer.Name.Equals(name)).ToList();
         }
 
+        /// <summary>
+        /// A show is considered to be OPEN if there are still available tickets
+        /// <remark>Time should also be factored in for extra readability</remark>
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public List<Event> OpenShows()
         {
-            throw new NotImplementedException();
+            var results = events.Where(e => e.NumAvailableTickets > 0).ToList();
+
+
+            // TODO: check if the time is reasonable
+
+            return results;
         }
 
         public void Sort()
@@ -56,7 +73,7 @@ namespace OperaHouse_Assignment3 :
 
         public List<Event> ShowsShorterThan(int minutes)
         {
-            throw new NotImplementedException();
+             throw new NotImplementedException();
         }
 
         //Helper method that returns the IDs of all the events in the order listed in the List 
@@ -72,6 +89,5 @@ namespace OperaHouse_Assignment3 :
             }
             return ids;
         }
-
     }
 }
