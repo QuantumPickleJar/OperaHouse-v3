@@ -74,7 +74,7 @@ namespace TicketingTest
         public void TestSortByPerformer()
         {
             //sort events by title
-            //events.SortByPerformer();
+            events.SortByPerformer();
             string[] expected = new string[] { "2", "3", "1" };
             string[] actual = events.eventIDs();
 

@@ -68,12 +68,12 @@ namespace OperaHouse_Assignment3
 
         public void Sort()
         {
-            throw new NotImplementedException();
+            events.Sort();
         }
 
         public List<Event> ShowsShorterThan(int minutes)
         {
-             throw new NotImplementedException();
+            return events.Where(e => e.DurationMinutes < minutes).ToList();
         }
 
         //Helper method that returns the IDs of all the events in the order listed in the List 
