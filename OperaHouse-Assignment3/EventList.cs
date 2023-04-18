@@ -39,10 +39,14 @@ namespace OperaHouse_Assignment3
         {
             events.Sort(new DateComparer());
         }
+        public void SortByPerformer()
+        {
+            events.Sort(new PerformerComparer());
+        }
 
         public void SortByTitle()
         {
-            throw new NotImplementedException();
+            events.Sort(new EventComparer() { SortOrder = EventComparer.SortBy.Title });
         }
 
         public List<Event> SearchByPerformer(string name)
@@ -68,7 +72,7 @@ namespace OperaHouse_Assignment3
 
         public void Sort()
         {
-            events.Sort();
+            events.Sort(new EventComparer());
         }
 
         public List<Event> ShowsShorterThan(int minutes)
