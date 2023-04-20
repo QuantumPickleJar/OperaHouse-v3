@@ -30,11 +30,11 @@ namespace OperaHouse_Assignment3
             this.events.AddRange(events);
         }
 
-        /// <summary>
-        /// #1: Events should be sorted by date as default/natural order
-        /// using the DateComparer
-        /// </summary>
-        /// <exception cref="NotImplmentedException"></exception>
+        public void SortByStage()
+        {
+            events.Sort(new StageComparer());
+        }
+
         public void SortByDate()
         {
             events.Sort(new DateComparer());
@@ -52,6 +52,14 @@ namespace OperaHouse_Assignment3
         public List<Event> SearchByPerformer(string name)
         {
             return events.Where(e => e.Performer.Name.Equals(name)).ToList();
+        }
+
+        public List<Event> SearchByPerformerNickname(string nickname)
+        {
+            /** Because I'm lazy, we have three LINQ choices: 
+                StartsWith(), EndsWith(), and Contains().
+             */
+            return events.Where(e => e.Performer.Name.Contains(nickname)).ToList();
         }
 
         /// <summary>

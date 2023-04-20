@@ -40,7 +40,7 @@ namespace OperaHouse_Assignment3
 
         public List<Ticket> tickets;
 
-        public Event(string id, string title, Performer performer, int numTickets, double ticketPrice, DateTime eventTime, int durationMinutes, bool concessionSales)
+        public Event(string id, string title, Stage stage, Performer performer, int numTickets, double ticketPrice, DateTime eventTime, int durationMinutes, bool concessionSales)
         {
             this.id = id;
             this.Title = title;

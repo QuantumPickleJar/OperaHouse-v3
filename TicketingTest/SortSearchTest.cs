@@ -23,13 +23,13 @@ namespace TicketingTest
             drDeath = new Performer("Dr Death", 1500);
             belushi = new Performer("Jim Belushi", 3500);
 
-            shrek = new Event("1", "Shrek", osawaHigh, 150, 12, new DateTime(2015, 4, 18, 19, 30, 0), 60, true);
-            deathShow = new Event("2", "Dr. Death's Musical Adventures", drDeath, 200, 20, new DateTime(2015, 4, 25, 19, 0, 0), 90, true);
-            belushiShow = new Event("3", "Belushi and the Board of Comedy", belushi, 160, 33, new DateTime(2015, 3, 4, 19, 45, 0), 120, false);
-
             main = new Stage("Main Stage", 100, 150);
             lounge = new Stage("The Lounge", 75, 50);
 
+
+            shrek = new Event("1", "Shrek", main, osawaHigh, 150, 12, new DateTime(2015, 4, 18, 19, 30, 0), 60, true);
+            deathShow = new Event("2", "Dr. Death's Musical Adventures", lounge, drDeath, 200, 20, new DateTime(2015, 4, 25, 19, 0, 0), 90, true);
+            belushiShow = new Event("3", "Belushi and the Board of Comedy", main, belushi, 160, 33, new DateTime(2015, 3, 4, 19, 45, 0), 120, false);
             events = new EventList();
             events.AddEvent(new List<Event> { shrek, deathShow, belushiShow });
         }
@@ -38,7 +38,7 @@ namespace TicketingTest
         [TestMethod]
         public void TestSortDefaultSort()
         {
-            //sort events by date
+            //perform a default sort
             events.Sort();
 
             string[] expected = new string[] { "3", "1", "2" };
@@ -84,7 +84,7 @@ namespace TicketingTest
         [TestMethod]
         public void TestSearchPerformer()
         {
-            events.AddEvent(new Event("4", "Midsummer Night", osawaHigh, 100, 10, new DateTime(2015, 9, 30, 19, 30, 0), 90, true));
+            events.AddEvent(new Event("4", "Midsummer Night", main, osawaHigh, 100, 10, new DateTime(2015, 9, 30, 19, 30, 0), 90, true));
 
             List<Event> osawaEvents = events.SearchByPerformer("Osawa High School");
 
@@ -92,7 +92,16 @@ namespace TicketingTest
             string[] actual = eventIDs(osawaEvents);
 
             CollectionAssert.AreEqual(expected, actual);
+
+            // test the partial search
+            osawaEvents.Clear();
+            osawaEvents = events.SearchByPerformerNickname("Osawa");
+
+            // Since the expected dataset is the same, expected & actual go untouched
+            Assert.AreEqual(expected, actual);
         }
+
+        // TODO: multi-criteria sort
 
         [TestMethod]
         public void TestSoldOutShow()
@@ -105,6 +114,7 @@ namespace TicketingTest
             Assert.IsFalse(shrek.IsSoldOut);
         }
 
+        // test for criteria #3: performance shorter than N minutes
         [TestMethod]
         public void TestShortShows()
         {
@@ -128,6 +138,8 @@ namespace TicketingTest
 
             CollectionAssert.AreEqual(expected, actual);
         }
+
+        
 
         //Helper method that returns the IDs of all the events in the order they currently appear in the List.
         //This is for testing purposes only
