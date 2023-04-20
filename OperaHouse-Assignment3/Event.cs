@@ -44,6 +44,7 @@ namespace OperaHouse_Assignment3
         {
             this.id = id;
             this.Title = title;
+            this.Stage = stage; 
             this.Performer = performer;
             this.totalNumTickets = numTickets;
             this.regularTicketPrice = ticketPrice;

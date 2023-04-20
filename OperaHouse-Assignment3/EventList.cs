@@ -49,6 +49,11 @@ namespace OperaHouse_Assignment3
             events.Sort(new EventComparer() { SortOrder = EventComparer.SortBy.Title });
         }
 
+        public List<Event> SearchByStage(string stagename)
+        {
+            return events.Where(s => s.Stage.StageName.Equals(stagename)).ToList();
+        }
+        
         public List<Event> SearchByPerformer(string name)
         {
             return events.Where(e => e.Performer.Name.Equals(name)).ToList();

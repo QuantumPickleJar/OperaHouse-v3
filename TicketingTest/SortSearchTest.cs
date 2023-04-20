@@ -31,6 +31,7 @@ namespace TicketingTest
             deathShow = new Event("2", "Dr. Death's Musical Adventures", lounge, drDeath, 200, 20, new DateTime(2015, 4, 25, 19, 0, 0), 90, true);
             belushiShow = new Event("3", "Belushi and the Board of Comedy", main, belushi, 160, 33, new DateTime(2015, 3, 4, 19, 45, 0), 120, false);
             events = new EventList();
+
             events.AddEvent(new List<Event> { shrek, deathShow, belushiShow });
         }
 
@@ -73,9 +74,17 @@ namespace TicketingTest
         [TestMethod]
         public void TestSortByPerformer()
         {
-            //sort events by title
             events.SortByPerformer();
             string[] expected = new string[] { "2", "3", "1" };
+            string[] actual = events.eventIDs();
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+        [TestMethod]
+        public void TestSortByStage()
+        {
+            events.SortByStage();
+            string[] expected = new string[] { "1", "3", "2" };
             string[] actual = events.eventIDs();
 
             CollectionAssert.AreEqual(expected, actual);
