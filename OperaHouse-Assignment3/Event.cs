@@ -11,207 +11,141 @@ namespace OperaHouse_Assignment3
 {
     public class Event
     {
+        private string id;
         private int totalNumTickets;
         private double regularTicketPrice;
+
+        public string ID { get { return id; } }
         public DateTime EventTime { get; set; }
         public int DurationMinutes { get; set; }
         public string Title { get; set; }
         public Performer Performer { get; set; }
         public Stage Stage { get; set; }
 
-        public bool IsSellingConcessions { get; set; }
+        public bool ConcessionSales { get; set; }
 
-
-        //public List<ConcessionSale>? ConcessionsLog { get; private set; }
-        public List<ConcessionSale> ConcessionsLog { get; private set; }
-
-        public int NumAvailableTickets { get; private set; }
-
-        // Holds the available pool of unsold tickets
-        //private List<Ticket> Roster { get; set; }
-
-        private Dictionary<int, Ticket> Roster { get; set; }
-
-
-        public Event(string title, Performer performer, int numTickets, double ticketPrice, DateTime eventTime, int durationMinutes, bool concessionSales)
+        public int NumAvailableTickets
         {
+            get
+            {
+                int result = 0;
+                foreach (Ticket t in tickets)
+                {
+                    if (!t.Sold)
+                        result++;
+                }
+                return result;
+            }
+        }
 
+        public List<Ticket> tickets;
+
+        public Event(string id, string title, Performer performer, int numTickets, double ticketPrice, DateTime eventTime, int durationMinutes, bool concessionSales)
+        {
+            this.id = id;
             this.Title = title;
-            this.Performer = performer;          
+            this.Performer = performer;
             this.totalNumTickets = numTickets;
             this.regularTicketPrice = ticketPrice;
             this.EventTime = eventTime;
             this.DurationMinutes = durationMinutes;
-            this.IsSellingConcessions = concessionSales;
-            // considered creating a Nullable class/struct to 
-            // void populating if ConcessionSales is false
-            this.ConcessionsLog = new List<ConcessionSale>();
-            //this.Roster = new List<Ticket>(numTickets);
-            this.Roster = new Dictionary<int, Ticket>(numTickets);
-
-
-            // iteratively populate tickets per the above datum
-            for (int i = 0; i < numTickets; i++)
+            this.ConcessionSales = concessionSales;
+            tickets = new List<Ticket>();
+            for (int i = 1; i <= numTickets; i++)
             {
-                // if (i = 0)th ticket, code will be 'A0'
-                // otherwise, we use i(0) as a base code:
-                string nextCode = i == 0 ? "A0" : NextSeatCode(Roster[i - 1].SeatCode);
-
-                var tck = new Ticket(i, regularTicketPrice, nextCode);
-
-                Roster.Add(i, tck);
-                //BindTicketToSeat(ref tck);
-
+                tickets.Add(new Ticket(i, ticketPrice));
             }
-            // update the property to reflect the roster
-            NumAvailableTickets = Roster.Count(); 
-           
         }
-
-        private string NextSeatCode(string prevCode)
-        {
-            // thanks to the ternary statement in CTOR for-loop, we can assume a non-null code
-            char aisle = prevCode[0];
-            int row = int.Parse(prevCode.Substring(1));
-
-
-            if (row < totalNumTickets % 26)
-                row++;
-            else
-            {
-                row = 0;
-                aisle = (char)(aisle + 1);
-            }
-
-            return $"{aisle}{row}";
-        }
-
-
 
         public override string ToString()
         {
             string result = Title + " by " + Performer + " on " + EventTime.ToShortDateString();
             result += " at " + EventTime.ToShortTimeString() + ". Concessions: ";
-            result += IsSellingConcessions ? "Yes. " : "No. ";
+            result += ConcessionSales ? "Yes. " : "No. ";
             result += "Tickets available: " + NumAvailableTickets;
             return result;
         }
-
 
         public bool IsWeekend()
         {
             if (EventTime.DayOfWeek == DayOfWeek.Sunday || EventTime.DayOfWeek == DayOfWeek.Saturday)
                 return true;
             else return false;
-
         }
 
         public double ShowExpenses()
         {
-            double stageCost = Stage.costPerHour * DurationMinutes/60.0 + Stage.cleaningFee;
+            double stageCost = Stage.costPerHour * DurationMinutes / 60.0 + Stage.cleaningFee;
             if (!IsWeekend())
                 stageCost *= 0.9;
             return stageCost + Performer.Fee;
-
         }
 
         public double Profit()
         {
-            return (IsSellingConcessions) ? (ConcessionSales() + TicketSales()) - ShowExpenses()
-                            : TicketSales() - ShowExpenses();
-        }
-
-        private double ConcessionSales()
-        {
-            return ConcessionsLog.Sum(c => c.Cost());
-        }
-
-        // derive the cost from the number of available tickets + price
-        public double TicketSales()
-        {
-
-            double profTickets = (totalNumTickets - NumAvailableTickets) * regularTicketPrice;
-            return profTickets;
-
-            //return ((totalNumTickets - NumAvailableTickets) * regularTicketPrice);
-
+            return TicketSales() - ShowExpenses();
         }
 
         public bool Profitable()
         {
             return Profit() > 0;
         }
-       
-        public double SellConcession(double cost, int quantity, string item)
-        {
-            ConcessionSale sale = new ConcessionSale(cost, quantity, item);
-            ConcessionsLog.Add(sale);
-            return sale.Cost();
-        }
 
-        public double SellTickets(int v)
+        public double SellTickets(int numTickets)
         {
-            if (NumAvailableTickets > 0)
-            { 
-                // avoid sheer oversale
-                if (NumAvailableTickets - v < 0 || v > totalNumTickets) 
+            double sales = 0;
+            int numSold = 0;
+            foreach (Ticket t in tickets)
+            {
+                if (!t.Sold)
                 {
-                    // limit v to match what can be supplied
-                    v = Math.Min(NumAvailableTickets, v);
-                }
-                // attempt to sell v tickets until run out
-                int numSold = 0; 
-                for (int i = 0; i < v; i++, NumAvailableTickets--)
-                {
-                    Roster[i].Purchase();
+                    sales += t.Price;
                     numSold++;
+                    t.Sold = true;
                 }
-
-                return numSold * regularTicketPrice;
-            // if we reach here, the transaction failed.
-            } else return 0;
+                if (numSold == numTickets)
+                    return sales;
+            }
+            return 0;
         }
-        
-        /**
-         * The question: 
-         * in the line given we're just given a range of ints.  
-         * Am I to understand that these ints should be traced 
-         * to some sort of TicketID property?  
-         * 
-         * If not, then the manner in which we're testing ReturnTickets
-         * would need to be altered.  Modifying teacher provided code 
-         * previously has been a sign of "going in the wrong direction"
-         * 
-         *
-         */
+
         public double ReturnTickets(List<int> ticketNums)
         {
-            double amtOwed = 0;
-            if (ticketNums.Count >= 0)
+            double result = 0;
+            foreach (int i in ticketNums)
             {
-                Ticket oldTicket = null;
-
-                //for (int i = 0; i < ticketNums; i++)
-                //{
-                //    if (Roster[i].IsBought)
-                //        amtOwed += Roster[i].Return();
-                //}
-
-                foreach (int t_id in ticketNums)
+                foreach (Ticket t in tickets)
                 {
-                    if (Roster.TryGetValue(t_id, out oldTicket))
+                    if (t.SeatNumber == i && t.Sold)
                     {
-                        // watch NumAvailableTickets
-                        amtOwed += Roster[t_id].Return();
-                        NumAvailableTickets++;
-                        //amtOwed = oldTicket.Price; see new one liner!
-
+                        result += t.Price;
+                        t.Sold = false;
                     }
-                    else return 0;
                 }
             }
-            return amtOwed;
+            return result;
         }
+
+        public double TicketSales()
+        {
+            double result = 0;
+            foreach (Ticket t in tickets)
+            {
+                if (t.Sold)
+                    result += t.Price;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns true if the number of available tickets is 0
+        /// </summary>
+        public bool IsSoldOut
+        {
+            get { return (NumAvailableTickets == 0); }
+
+        }
+
     }
 
 }
