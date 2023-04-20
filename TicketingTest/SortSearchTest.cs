@@ -105,9 +105,10 @@ namespace TicketingTest
             // test the partial search
             osawaEvents.Clear();
             osawaEvents = events.SearchByPerformerNickname("Osawa");
+            actual = eventIDs(osawaEvents);
 
             // Since the expected dataset is the same, expected & actual go untouched
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
 
         // TODO: multi-criteria sort
